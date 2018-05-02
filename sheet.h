@@ -26,7 +26,6 @@ void moveto(int position) {
 	gpioPWM(PIN_MOTOR, SPEED_NOMINAL);
 }
 
-
 void decode(int pin, int level, uint32_t tick) {
 	if (level == 1){
 		char bState = gpioRead(PIN_ENCB);

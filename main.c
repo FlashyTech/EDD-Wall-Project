@@ -6,6 +6,18 @@
 #include "sheet.h" //drives the sheet using information from encoder
 
 int encoderPos;
+int occupied;
+
+void buttonPress(int pin, int level, uint32_t tick) {
+	if (level == 1 && occupied == 0){
+		occupied = 1;
+		if (encoderPos == RETRACTPOS)
+			moveto(DEPLOYPOS);
+		else
+			moveto(RETRACTPOS);
+		occupied = 0;
+	}
+}
 
 int initialize() {
 	if (gpioInitialise() < 0)
@@ -19,17 +31,16 @@ int initialize() {
 
 	// Encoder channel A
 	gpioSetMode(PIN_ENCA, PI_INPUT);
-	gpioSetPullUpDown(PIN_ENCA, PI_PUD_DOWN);
 	encoderPos = 0;
 	gpioSetAlertFunc(PIN_ENCA, decode);
 
 	// Encoder channel B
 	gpioSetMode(PIN_ENCB, PI_INPUT);
-	gpioSetPullUpDown(PIN_ENCB, PI_PUD_DOWN);
 
 	// Button for who knows what
 	gpioSetMode(PIN_BTN, PI_INPUT);
 	gpioSetPullUpDown(PIN_BTN, PI_PUD_DOWN);
+	gpioSetAlertFunc(PIN_BTN, buttonPress);
 
 	return 0;
 }
@@ -40,9 +51,7 @@ int main() {
 		return EXIT_FAILURE;
 	}
 
-	gpioPWM(PIN_MOTOR, SPEED_FORWARD);
-	printf("Running motor at full forward throttle\n");
-	printf("Press any key to continue: ");
+	printf("Press any key to quit: ");
 	getchar();
 
 	return EXIT_SUCCESS;
