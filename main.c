@@ -13,8 +13,8 @@ int initialize() {
 
 	// PWM channel for motor
 	gpioSetMode(PIN_MOTOR, PI_OUTPUT);
-	gpioSetPWMRange(PIN_MOTOR, 300);
-	gpioSetPWMFrequency(PIN_MOTOR, 1 / 0.003);
+	gpioSetPWMrange(PIN_MOTOR, 300);
+	gpioSetPWMfrequency(PIN_MOTOR, 1 / 0.003);
 	gpioPWM(PIN_MOTOR, SPEED_NOMINAL);
 
 	// Encoder channel A
@@ -35,12 +35,12 @@ int initialize() {
 }
 
 int main() {
-	if (!initialize()){
+	if (initialize() == 1){
 		fprintf(stderr, "Error: GPIO initialization failed");
 		return EXIT_FAILURE;
 	}
 
-	gpioPWM(PIN_MOTOR, SPEED_MAXFWRD);
+	gpioPWM(PIN_MOTOR, SPEED_FORWARD);
 	printf("Running motor at full forward throttle\n");
 	printf("Press any key to continue: ");
 	getchar();

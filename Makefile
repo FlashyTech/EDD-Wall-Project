@@ -1,13 +1,19 @@
 CC = gcc
 CFLAGS = -O2 -march=native
-DEPS = pin.h sheet.h
 
-%.o: %.c $(DEPS)
-	$(CC) -co $@ $^ $(CFLAGS) -pthread -lpigpio -lrt
+GCH = pin.h.gch sheet.h.gch
+OBJ = main.o 
 
-eddwall: %.o
-	gcc -o $@ $^ $(CFLAGS)
+eddwall: $(OBJ) $(GCH)
+	gcc -o $@ $(OBJ) $(CFLAGS) -lpigpio -pthread -lrt
+
+$(GCH): *.h
+	$(CC) -c $^ $(CFLAGS) -pthread -lpigpio -lrt
+
+$(OBJ): *.c
+	$(CC) -c $^ $(CFLAGS) -pthread -lpigpio -lrt
+
 
 .PHONY: clean
 clean:
-	rm %.o
+	rm *.o *.gch

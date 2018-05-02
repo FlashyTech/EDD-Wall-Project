@@ -1,4 +1,5 @@
 #include <pigpio.h>
+#include <stdio.h>
 
 #include "pin.h"
 
@@ -6,17 +7,17 @@
 #define DEPLOYPOS 100
 
 #define SPEED_MAXFWRD 200
-#define SPEED_FORWARD 160
+#define SPEED_FORWARD 151
 #define SPEED_NOMINAL 150
-#define SPEED_BACKWARD 140
+#define SPEED_BACKWARD 149
 #define SPEED_MAXBKWD 100
 
-extern encoderPos;
+extern int encoderPos;
 
 void moveto(int position) {
 	if (encoderPos < position){
 		gpioPWM(PIN_MOTOR, SPEED_FORWARD);
-		while (encoderPos < position) ()
+		while (encoderPos < position) {}
 	}
 	else if (encoderPos > position){
 		gpioPWM(PIN_MOTOR, SPEED_BACKWARD);
@@ -34,5 +35,6 @@ void decode(int pin, int level, uint32_t tick) {
 		if (bState == 1)
 			encoderPos--;
 	}
+	printf("Encoder: %d", encoderPos);
 }
 
