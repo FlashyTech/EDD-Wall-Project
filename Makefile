@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -O2 -march=native
-DEPS = pin.h
+DEPS = pin.h sheet.h
 
 %.o: %.c $(DEPS)
 	$(CC) -co $@ $^ $(CFLAGS) -pthread -lpigpio -lrt

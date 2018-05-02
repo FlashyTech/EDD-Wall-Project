@@ -1,3 +1,6 @@
+#ifndef pinheader
+#define pinheader
+
 // PWM pin for motor controller
 #define PIN_MOTOR 18
 
@@ -7,3 +10,5 @@
 
 // Buttons
 #define PIN_BTN 23
+
+#endif
