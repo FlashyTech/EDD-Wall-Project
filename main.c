@@ -39,7 +39,7 @@ int initialize() {
 
 	// Button for who knows what
 	gpioSetMode(PIN_BTN, PI_INPUT);
-	gpioSetPullUpDown(PIN_BTN, PI_PUD_DOWN);
+	gpioSetPullUpDown(PIN_BTN, PI_PUD_UP);
 	gpioSetAlertFunc(PIN_BTN, buttonPress);
 
 	return 0;
@@ -51,6 +51,9 @@ int main() {
 		return EXIT_FAILURE;
 	}
 
+	printf("Extending...");
+	moveto(DEPLOYPOS);
+	printf("%d", encoderPos);
 	printf("Press any key to quit: ");
 	getchar();
 
