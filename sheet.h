@@ -7,9 +7,9 @@
 #define DEPLOYPOS 100
 
 #define SPEED_MAXFWRD 100
-#define SPEED_FORWARD 145
+#define SPEED_FORWARD 147
 #define SPEED_NOMINAL 150
-#define SPEED_BACKWARD 155
+#define SPEED_BACKWARD 153
 #define SPEED_MAXBKWD 200
 
 extern int encoderPos;

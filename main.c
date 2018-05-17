@@ -11,7 +11,7 @@ int occupied;
 void buttonPress(int pin, int level, uint32_t tick) {
 	if (level == 1 && occupied == 0){
 		occupied = 1;
-		if (encoderPos == RETRACTPOS)
+		if (encoderPos <= RETRACTPOS)
 			moveto(DEPLOYPOS);
 		else
 			moveto(RETRACTPOS);
@@ -32,14 +32,13 @@ int initialize() {
 	// Encoder channel A
 	gpioSetMode(PIN_ENCA, PI_INPUT);
 	encoderPos = 0;
-	gpioSetAlertFunc(PIN_ENCA, decode);
 
 	// Encoder channel B
 	gpioSetMode(PIN_ENCB, PI_INPUT);
 
 	// Button for who knows what
 	gpioSetMode(PIN_BTN, PI_INPUT);
-	gpioSetPullUpDown(PIN_BTN, PI_PUD_UP);
+	gpioSetPullUpDown(PIN_BTN, PI_PUD_DOWN);
 	gpioSetAlertFunc(PIN_BTN, buttonPress);
 
 	return 0;
@@ -51,11 +50,14 @@ int main() {
 		return EXIT_FAILURE;
 	}
 
-	printf("Extending...");
-	moveto(DEPLOYPOS);
-	printf("%d", encoderPos);
-	printf("Press any key to quit: ");
-	getchar();
-
+	for (;;) {
+		while (gpioRead(PIN_BTN) == 0) {}
+		
+		if (encoderPos <= RETRACTPOS)
+			moveto(DEPLOYPOS);
+		else if (encoderPos >= DEPLOYPOS)
+			moveto(RETRACTPOS);
+	}
+	
 	return EXIT_SUCCESS;
 }
