@@ -31,12 +31,12 @@ int initialize() {
 
 	// Encoder channel A
 	gpioSetMode(PIN_ENCA, PI_INPUT);
-	encoderPos = 0;
+	encoderPos = DEPLOYEDPOS;
 
 	// Encoder channel B
 	gpioSetMode(PIN_ENCB, PI_INPUT);
 
-	// Button for who knows what
+	// Button to toggle motor position
 	gpioSetMode(PIN_BTN, PI_INPUT);
 	gpioSetPullUpDown(PIN_BTN, PI_PUD_DOWN);
 	gpioSetAlertFunc(PIN_BTN, buttonPress);
@@ -55,7 +55,7 @@ int main() {
 		
 		if (encoderPos <= RETRACTPOS)
 			moveto(DEPLOYPOS);
-		else if (encoderPos >= DEPLOYPOS)
+		else
 			moveto(RETRACTPOS);
 	}
 	
