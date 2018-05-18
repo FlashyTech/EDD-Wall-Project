@@ -1,5 +1,6 @@
 #include <pigpio.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "pin.h"
 
@@ -14,15 +15,29 @@
 
 extern int encoderPos;
 
+void delay(int ms) {
+	long pause = ms*(CLOCKS_PER_SEC/1000);
+	now = then = clock();
+	
+	while (now - then < pause)
+		now = clock();
+}
+
 void moveto(int position) {
 	if (encoderPos < position){
-		gpioPWM(PIN_MOTOR, SPEED_FORWARD);
+		for (int speed = SPEED_NOMINAL; speed <= SPEED_FORWARD; speed++){
+			gpioPWM(PIN_MOTOR, speed);
+			delay(50);
+		}
 		while (encoderPos < position) {
 				printf(NULL);
 		}
 	}
 	else if (encoderPos > position){
-		gpioPWM(PIN_MOTOR, SPEED_BACKWARD);
+		for (int speed = SPEED_NOMINAL; speed >= SPEED_BACKWARD; speed++){
+			gpioPWM(PIN_MOTOR, speed);
+			delay(50);
+		}
 		while (encoderPos > position) {
 				printf(NULL);
 		}
@@ -33,10 +48,10 @@ void moveto(int position) {
 void decode(int pin, int level, uint32_t tick) {
 	if (level == 1){
 		char bState = gpioRead(PIN_ENCB);
-		if (bState == 0)
-			encoderPos++;
-		if (bState == 1)
+		if (bState == 0) //clockwise (negative) rotation
 			encoderPos--;
+		if (bState == 1) //counterclockwise (positive) rotation
+			encoderPos++;
 	}
 }
 
